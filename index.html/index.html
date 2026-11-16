@@ -8,43 +8,47 @@
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#101116;color:#eee;font-family:Arial,sans-serif}
-header{padding:18px 20px;background:#181a22;border-bottom:1px solid #30323d;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.logo{font-size:23px;font-weight:bold;color:#a78bfa}
+header{padding:18px;background:#191b24;border-bottom:1px solid #343644;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.logo{font-size:24px;font-weight:bold;color:#a78bfa}
 .logo span{color:white}
-nav{display:flex;gap:7px;overflow-x:auto;padding:12px;background:#181a22}
-button,.tab{background:#252735;color:#eee;border:1px solid #383b4c;padding:11px 14px;border-radius:9px;cursor:pointer}
-button:hover,.tab.active{background:#7054c7;border-color:#9278e8}
-button.primary{background:#7655d8;border:0}
-button.danger{background:#9e3947}
-main{padding:16px;max-width:1100px;margin:auto}
+nav{display:flex;overflow-x:auto;gap:7px;padding:12px;background:#191b24}
+button{background:#292c3b;color:white;border:1px solid #414456;padding:11px 14px;border-radius:9px;cursor:pointer;white-space:nowrap}
+button:active,button.active{background:#7655d8}
+.primary{background:#7655d8}
+.danger{background:#9d3848}
+main{max-width:1100px;margin:auto;padding:15px}
 .page{display:none}.page.active{display:block}
-.panel{background:#191b24;border:1px solid #303341;border-radius:13px;padding:16px;margin-bottom:14px}
-h2{font-size:20px;margin:0 0 14px}h3{font-size:16px;margin:12px 0}
-input,select,textarea{width:100%;padding:12px;background:#10121a;border:1px solid #393c4d;color:white;border-radius:8px;margin:6px 0 12px;font:inherit}
-textarea{min-height:230px;font-family:monospace;resize:vertical}
-label{font-size:13px;color:#bbb}
-.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1}
+.panel{background:#1a1c26;border:1px solid #343644;border-radius:13px;padding:16px;margin-bottom:14px}
+h2{font-size:20px;margin:0 0 15px}
+h3{font-size:16px;margin:15px 0 8px}
+input,select,textarea{width:100%;padding:12px;background:#11131b;color:white;border:1px solid #414456;border-radius:8px;margin:6px 0 12px;font:inherit}
+textarea{min-height:240px;font-family:monospace;resize:vertical}
+label{font-size:13px;color:#aaa}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px}
+.grid button{white-space:normal;min-height:55px}
+.small{font-size:12px;color:#aaa;line-height:1.6}
+.status{font-size:13px;color:#b7a1ff;margin-top:12px;white-space:pre-wrap}
 .filelist{display:flex;flex-direction:column;gap:6px}
-.fileitem{padding:10px;background:#11131a;border:1px solid #303341;border-radius:7px;display:flex;justify-content:space-between;gap:8px;overflow-wrap:anywhere}
-.fileitem button{padding:6px 9px}
-.small{font-size:12px;color:#9da0ae}
-.status{color:#a78bfa;margin-top:10px;white-space:pre-wrap}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px}
-.grid button{min-height:65px}
-footer{text-align:center;color:#777;padding:25px;font-size:12px}
+.fileitem{display:flex;align-items:center;justify-content:space-between;gap:8px;background:#11131b;padding:9px;border-radius:8px;overflow-wrap:anywhere}
+.fileitem span{font-size:13px;flex:1}
+.fileitem button{padding:7px}
+footer{text-align:center;color:#777;padding:25px}
 </style>
 </head>
 <body>
 <header>
  <div class="logo">CostLite <span>Creator</span></div>
- <div class="small">Minecraft Addon & Mod Studio</div>
+ <div class="small">Minecraft Studio</div>
 </header>
+
 <nav>
- <button class="tab active" data-page="home">Главная</button>
- <button class="tab" data-page="bedrock">Bedrock</button>
- <button class="tab" data-page="files">Файлы</button>
- <button class="tab" data-page="java">Java</button>
- <button class="tab" data-page="export">Экспорт</button>
+ <button class="active" data-page="home">Главная</button>
+ <button data-page="bedrock">Bedrock</button>
+ <button data-page="files">Файлы</button>
+ <button data-page="java">Java</button>
+ <button data-page="export">Экспорт</button>
 </nav>
 
 <main>
@@ -52,9 +56,9 @@ footer{text-align:center;color:#777;padding:25px;font-size:12px}
  <div class="panel">
   <h2>Мой проект</h2>
   <label>Название проекта</label>
-  <input id="projectName" value="MyAddon" placeholder="Например, MyDragon">
+  <input id="projectName" value="MyAddon">
   <label>Описание</label>
-  <input id="projectDescription" value="Создано в CostLite Creator">
+  <input id="description" value="Created with CostLite Creator">
   <label>Тип проекта</label>
   <select id="projectType">
    <option value="bedrock">Minecraft Bedrock</option>
@@ -62,18 +66,18 @@ footer{text-align:center;color:#777;padding:25px;font-size:12px}
    <option value="both">Bedrock + Java</option>
   </select>
   <div class="row">
-   <button class="primary" onclick="saveProject()">Сохранить проект</button>
-   <button onclick="loadProject()">Загрузить сохранение</button>
+   <button class="primary" onclick="saveProject()">Сохранить</button>
+   <button onclick="loadProject()">Загрузить</button>
    <button class="danger" onclick="clearProject()">Очистить</button>
   </div>
   <div id="homeStatus" class="status"></div>
  </div>
  <div class="panel">
-  <h2>Быстрый старт</h2>
+  <h2>Быстрые действия</h2>
   <div class="grid">
-   <button onclick="createStarter()">Создать структуру Bedrock</button>
-   <button onclick="createJavaStarter()">Создать структуру Java</button>
-   <button onclick="go('files')">Открыть редактор файлов</button>
+   <button onclick="createBedrock()">Создать Bedrock</button>
+   <button onclick="createJava()">Создать Java</button>
+   <button onclick="go('files')">Редактор файлов</button>
    <button onclick="go('export')">Скачать проект</button>
   </div>
  </div>
@@ -82,54 +86,51 @@ footer{text-align:center;color:#777;padding:25px;font-size:12px}
 <section class="page" id="bedrock">
  <div class="panel">
   <h2>Конструктор Bedrock</h2>
-  <p class="small">Создаёт файлы аддона. Для полноценной работы в игре проверь совместимость компонентов с версией Minecraft.</p>
-  <label>Название моба</label>
+  <p class="small">Создавай JSON-файлы для своих аддонов Minecraft Bedrock.</p>
+  <h3>Создать моба</h3>
+  <label>Название</label>
   <input id="mobName" value="my_mob">
   <div class="row">
-   <div><label>Здоровье</label><input id="mobHealth" type="number" value="20"></div>
-   <div><label>Скорость</label><input id="mobSpeed" type="number" value="0.25" step="0.05"></div>
-   <div><label>Урон</label><input id="mobDamage" type="number" value="3"></div>
+   <div><label>Здоровье</label><input id="health" type="number" value="20"></div>
+   <div><label>Скорость</label><input id="speed" type="number" value="0.25" step="0.05"></div>
+   <div><label>Урон</label><input id="damage" type="number" value="3"></div>
   </div>
-  <button class="primary" onclick="createMob()">Создать файлы моба</button>
+  <button class="primary" onclick="makeMob()">Создать моба</button>
   <hr>
-  <h3>Предмет</h3>
-  <label>Идентификатор предмета (без пробелов)</label>
-  <input id="itemName" value="ruby">
-  <button onclick="createItem()">Создать предмет</button>
+  <h3>Создать предмет</h3>
+  <input id="itemName" value="ruby" placeholder="Название предмета">
+  <button onclick="makeItem()">Создать предмет</button>
   <hr>
-  <h3>Рецепт</h3>
-  <label>Идентификатор результата</label>
-  <input id="recipeResult" value="minecraft:diamond">
-  <label>Количество</label>
+  <h3>Создать рецепт</h3>
+  <input id="recipeId" value="minecraft:diamond" placeholder="ID результата">
   <input id="recipeCount" type="number" value="1">
-  <button onclick="createRecipe()">Создать пример рецепта</button>
+  <button onclick="makeRecipe()">Создать рецепт</button>
   <div id="bedrockStatus" class="status"></div>
  </div>
 </section>
 
 <section class="page" id="files">
  <div class="panel">
-  <h2>Редактор файлов</h2>
-  <div class="row">
-   <button onclick="createStarter()">Добавить структуру Bedrock</button>
-   <button onclick="createJavaStarter()">Добавить структуру Java</button>
-  </div>
-  <label>Путь нового файла</label>
+  <h2>Файловый менеджер</h2>
+  <label>Путь файла</label>
   <input id="newPath" placeholder="behavior_pack/example.json">
-  <button onclick="createFile()">Создать файл</button>
-  <label>Импорт файла с устройства</label>
-  <input type="file" id="fileImport">
-  <button onclick="importFile()">Импортировать файл</button>
+  <button onclick="newFile()">Создать файл</button>
+  <h3>Импорт файла</h3>
+  <input type="file" id="importOne">
+  <button onclick="importOneFile()">Импортировать</button>
+  <h3>Импорт целого проекта</h3>
+  <input type="file" id="importArchive" accept=".zip,.mcpack,.mcaddon">
+  <button onclick="importArchive()">Импортировать архив</button>
   <h3>Файлы проекта</h3>
   <div id="fileList" class="filelist"></div>
  </div>
  <div class="panel">
   <h2 id="editorTitle">Редактор</h2>
-  <textarea id="editor" spellcheck="false" placeholder="Выбери файл из списка или создай новый..."></textarea>
+  <textarea id="editor" spellcheck="false" placeholder="Выбери файл..."></textarea>
   <div class="row">
-   <button class="primary" onclick="saveEditedFile()">Сохранить файл</button>
-   <button onclick="validateEditor()">Проверить JSON</button>
-   <button class="danger" onclick="deleteCurrent()">Удалить файл</button>
+   <button class="primary" onclick="saveFile()">Сохранить файл</button>
+   <button onclick="checkJSON()">Проверить JSON</button>
+   <button class="danger" onclick="deleteFile()">Удалить</button>
   </div>
   <div id="fileStatus" class="status"></div>
  </div>
@@ -138,227 +139,282 @@ footer{text-align:center;color:#777;padding:25px;font-size:12px}
 <section class="page" id="java">
  <div class="panel">
   <h2>Java Mod Builder</h2>
-  <p class="small">Генератор стартового проекта Fabric. Он создаёт исходники и настройки Gradle.</p>
-  <label>Название мода</label>
-  <input id="javaModName" value="mymod">
-  <label>Java package</label>
+  <label>ID мода</label>
+  <input id="modId" value="mymod">
+  <label>Java Package</label>
   <input id="javaPackage" value="com.example.mymod">
   <label>Имя главного класса</label>
-  <input id="javaClass" value="MyMod">
-  <button class="primary" onclick="createJavaStarter()">Создать Java-проект</button>
+  <input id="className" value="MyMod">
+  <button class="primary" onclick="createJava()">Создать Java-проект</button>
   <div id="javaStatus" class="status"></div>
   <hr>
-  <h3>Как получить настоящий JAR</h3>
-  <ol class="small">
-   <li>Создай Java-проект.</li>
-   <li>Скачай его через вкладку «Экспорт».</li>
-   <li>Загрузи ZIP в отдельный GitHub-репозиторий.</li>
-   <li>Открой вкладку Actions и запусти сборку.</li>
-   <li>Скачай готовый JAR из Artifacts после завершения сборки.</li>
-  </ol>
+  <h3>Сборка JAR</h3>
+  <p class="small">Экспортируй Java ZIP, загрузи его в GitHub-репозиторий, открой Actions и запусти сборку. Готовый JAR появится в Artifacts.</p>
  </div>
 </section>
 
 <section class="page" id="export">
  <div class="panel">
-  <h2>Экспорт проекта</h2>
-  <p class="small">Имя скачиваемого файла берётся из названия проекта.</p>
-  <label>Название проекта</label>
+  <h2>Экспорт и скачивание</h2>
+  <label>Имя скачиваемого файла</label>
   <input id="exportName" value="MyAddon">
   <h3>Minecraft Bedrock</h3>
   <div class="grid">
-   <button class="primary" onclick="exportPack('behavior')">Скачать Behavior .mcpack</button>
-   <button class="primary" onclick="exportPack('resource')">Скачать Resource .mcpack</button>
-   <button class="primary" onclick="exportAddon()">Скачать .mcaddon</button>
+   <button class="primary" onclick="downloadPack('behavior')">Behavior .mcpack</button>
+   <button class="primary" onclick="downloadPack('resource')">Resource .mcpack</button>
+   <button class="primary" onclick="downloadAddon()">Полный .mcaddon</button>
   </div>
   <h3>Другие форматы</h3>
   <div class="grid">
-   <button onclick="exportZip()">Скачать весь проект .zip</button>
-   <button onclick="exportJava()">Скачать Java-проект .zip</button>
+   <button onclick="downloadAll()">Весь проект .zip</button>
+   <button onclick="downloadJava()">Java-проект .zip</button>
   </div>
   <div id="exportStatus" class="status"></div>
  </div>
 </section>
 </main>
-<footer>CostLite Studio · CostLite Creator</footer>
+<footer>CostLite Studio</footer>
 
 <script>
-const $=id=>document.getElementById(id);
+'use strict';
+
 let files={};
-let currentFile=null;
+let current=null;
 
-function go(page){
- document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
- document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
- $(''+page).classList.add('active');
- document.querySelector('[data-page="'+page+'"]').classList.add('active');
- if(page==='files')renderFiles();
- if(page==='export')$('exportName').value=projectName();
+const $=id=>document.getElementById(id);
+function say(id,msg){$(id).textContent=msg}
+function cleanName(v){
+ return String(v||'MyAddon').trim().replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_')||'MyAddon';
 }
-document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>go(b.dataset.page));
-
-function projectName(){
- return ($('projectName').value||$('exportName').value||'MyProject')
- .trim().replace(/[\\/:*?"<>|]/g,'_').replace(/\s+/g,'_')||'MyProject';
-}
+function projectName(){return cleanName($('projectName').value)}
+function uuid(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{let r=Math.random()*16|0;return(c==='x'?r:(r&3|8)).toString(16)})}
 function safePath(p){
- p=String(p||'').replace(/\\/g,'/').replace(/^\/+/,'');
- if(!p||p.split('/').some(x=>x==='..'||x===''))throw Error('Неправильный путь');
+ p=String(p||'').trim().replace(/\\/g,'/');
+ if(!p||p.startsWith('/')||p.split('/').some(x=>x==='..'||x===''))throw Error('Неправильный путь файла');
  return p;
 }
-function put(path,content){
- files[safePath(path)]=String(content);
+function put(p,c){files[safePath(p)]=typeof c==='string'?c:JSON.stringify(c,null,2)}
+function go(id){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ $(id).classList.add('active');
+ document.querySelector('[data-page="'+id+'"]').classList.add('active');
+ if(id==='files')renderFiles();
+ if(id==='export')$('exportName').value=projectName();
 }
-function uuid(){
- return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
-  let r=Math.random()*16|0;
-  return (c==='x'?r:(r&3|8)).toString(16);
- });
-}
-function manifest(name,type){
- return {
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>go(b.dataset.page)));
+
+function createBedrock(){
+ const bp={
   format_version:2,
-  header:{
-   name:name,
-   description:$('projectDescription').value||'Created with CostLite',
-   uuid:uuid(),
-   version:[1,0,0],
-   min_engine_version:[1,20,0]
-  },
-  modules:[{
-   type:type,
-   uuid:uuid(),
-   version:[1,0,0]
-  }]
+  header:{name:projectName()+' Behavior Pack',description:'Created with CostLite',uuid:uuid(),version:[1,0,0],min_engine_version:[1,20,0]},
+  modules:[{type:'data',uuid:uuid(),version:[1,0,0]}]
  };
-}
-function createStarter(){
- const bp=manifest(projectName()+' Behavior Pack','data');
- const rp=manifest(projectName()+' Resource Pack','resources');
- put('behavior_pack/manifest.json',JSON.stringify(bp,null,2));
- put('resource_pack/manifest.json',JSON.stringify(rp,null,2));
- put('behavior_pack/pack_icon.png.txt','Замените этот файл настоящей PNG-иконкой при необходимости.');
- put('resource_pack/pack_icon.png.txt','Замените этот файл настоящей PNG-иконкой при необходимости.');
- put('README.txt','Bedrock project created with CostLite Creator.');
+ const rp={
+  format_version:2,
+  header:{name:projectName()+' Resource Pack',description:'Created with CostLite',uuid:uuid(),version:[1,0,0],min_engine_version:[1,20,0]},
+  modules:[{type:'resources',uuid:uuid(),version:[1,0,0]}]
+ };
+ put('behavior_pack/manifest.json',bp);
+ put('resource_pack/manifest.json',rp);
+ put('README.txt','Created with CostLite Creator.');
  renderFiles();
- $('bedrockStatus').textContent='Структура Bedrock создана.';
+ say('bedrockStatus','Структура Bedrock создана.');
 }
-function createMob(){
+function makeMob(){
  try{
-  let name=$('mobName').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'_');
-  if(!name)throw Error('Укажи имя моба');
-  let hp=Math.max(1,Number($('mobHealth').value)||20);
-  let speed=Math.max(0,Number($('mobSpeed').value)||0.25);
-  let damage=Math.max(0,Number($('mobDamage').value)||3);
-  if(!files['behavior_pack/manifest.json'])createStarter();
-  let entity={
+  if(!files['behavior_pack/manifest.json'])createBedrock();
+  let n=$('mobName').value.toLowerCase().trim().replace(/[^a-z0-9_]/g,'_');
+  if(!n)throw Error('Укажи имя моба');
+  let hp=Math.max(1,Number($('health').value)||20);
+  let sp=Math.max(0,Number($('speed').value)||0.25);
+  let dmg=Math.max(0,Number($('damage').value)||3);
+  let data={
    format_version:'1.20.80',
    'minecraft:entity':{
-    description:{
-     identifier:'costlite:'+name,
-     is_spawnable:true,
-     is_summonable:true,
-     is_experimental:false
-    },
+    description:{identifier:'costlite:'+n,is_spawnable:true,is_summonable:true,is_experimental:false},
     components:{
      'minecraft:type_family':{family:['costlite_mob','mob']},
      'minecraft:health':{value:hp,max:hp},
-     'minecraft:movement':{value:speed},
+     'minecraft:movement':{value:sp},
      'minecraft:collision_box':{width:0.6,height:1.8},
      'minecraft:physics':{},
-     'minecraft:pushable':{is_pushable:true,is_pushable_by_piston:true},
      'minecraft:movement.basic':{},
      'minecraft:navigation.walk':{can_path_over_water:true},
      'minecraft:behavior.random_stroll':{priority:6,speed_multiplier:1},
      'minecraft:behavior.look_at_player':{priority:7},
-     'minecraft:behavior.nearest_attackable_target':{
-      priority:2,must_see:true,entity_types:[
-       {filters:{test:'is_family',subject:'other',value:'player'},max_dist:16}
-      ]
-     },
-     'minecraft:attack':{damage:damage}
+     'minecraft:attack':{damage:dmg}
     }
    }
   };
-  put('behavior_pack/entities/'+name+'.json',JSON.stringify(entity,null,2));
-  put('resource_pack/entity/'+name+'.entity.json',JSON.stringify({
-   format_version:'1.10.0',
-   'minecraft:client_entity':{
-    description:{
-     identifier:'costlite:'+name,
-     materials:{default:'entity_alphatest'},
-     textures:{default:'textures/entity/zombie/zombie'},
-     geometry:{default:'geometry.humanoid'},
-     render_controllers:['controller.render.default']
-    }
-   }
-  },null,2));
-  $('bedrockStatus').textContent='Файлы моба созданы. Для собственного внешнего вида понадобятся свои геометрия и текстуры.';
+  put('behavior_pack/entities/'+n+'.json',data);
+  say('bedrockStatus','Файл моба создан. Для отображения моба в игре добавь client entity, геометрию и текстуру.');
   renderFiles();
- }catch(e){$('bedrockStatus').textContent=e.message}
+ }catch(e){say('bedrockStatus',e.message)}
 }
-function createItem(){
+function makeItem(){
  try{
-  let name=$('itemName').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'_');
-  if(!name)throw Error('Укажи имя предмета');
-  if(!files['behavior_pack/manifest.json'])createStarter();
-  put('behavior_pack/items/'+name+'.json',JSON.stringify({
+  if(!files['behavior_pack/manifest.json'])createBedrock();
+  let n=$('itemName').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'_');
+  if(!n)throw Error('Укажи название');
+  put('behavior_pack/items/'+n+'.json',{
    format_version:'1.20.50',
    'minecraft:item':{
-    description:{identifier:'costlite:'+name,menu_category:{category:'items'}},
+    description:{identifier:'costlite:'+n,menu_category:{category:'items'}},
     components:{
      'minecraft:max_stack_size':64,
-     'minecraft:icon':{texture:name},
-     'minecraft:display_name':{value:name}
+     'minecraft:display_name':{value:n}
     }
    }
-  },null,2));
-  $('bedrockStatus').textContent='JSON предмета создан. Добавь текстуру и её описание в Resource Pack.';
+  });
+  say('bedrockStatus','Файл предмета создан.');
   renderFiles();
- }catch(e){$('bedrockStatus').textContent=e.message}
+ }catch(e){say('bedrockStatus',e.message)}
 }
-function createRecipe(){
+function makeRecipe(){
  try{
-  let result=$('recipeResult').value.trim();
-  let count=Math.max(1,Number($('recipeCount').value)||1);
-  if(!result.includes(':'))throw Error('Укажи ID результата, например minecraft:diamond');
-  if(!files['behavior_pack/manifest.json'])createStarter();
-  put('behavior_pack/recipes/example_recipe.json',JSON.stringify({
+  if(!files['behavior_pack/manifest.json'])createBedrock();
+  let id=$('recipeId').value.trim();
+  if(!id.includes(':'))throw Error('Нужен ID с namespace, например minecraft:diamond');
+  put('behavior_pack/recipes/example_recipe.json',{
    format_version:'1.20.10',
    'minecraft:recipe_shaped':{
     description:{identifier:'costlite:example_recipe'},
     tags:['crafting_table'],
     pattern:['AAA',' B ',' B '],
-    key:{
-     A:{item:'minecraft:iron_ingot'},
-     B:{item:'minecraft:stick'}
-    },
-    result:{item:result,count:count}
+    key:{A:{item:'minecraft:iron_ingot'},B:{item:'minecraft:stick'}},
+    result:{item:id,count:Math.max(1,Number($('recipeCount').value)||1)}
    }
-  },null,2));
-  $('bedrockStatus').textContent='Пример рецепта создан.';
+  });
+  say('bedrockStatus','Рецепт создан.');
   renderFiles();
- }catch(e){$('bedrockStatus').textContent=e.message}
+ }catch(e){say('bedrockStatus',e.message)}
 }
-function createJavaStarter(){
- let mod=$('javaModName').value.trim().toLowerCase().replace(/[^a-z0-9_-]/g,'_')||'mymod';
+function newFile(){
+ try{
+  let p=safePath($('newPath').value);
+  if(files[p]!==undefined&&!confirm('Перезаписать файл?'))return;
+  put(p,'');
+  $('newPath').value='';
+  openFile(p);renderFiles();
+ }catch(e){alert(e.message)}
+}
+function openFile(p){
+ current=p;
+ $('editorTitle').textContent=p;
+ $('editor').value=files[p]??'';
+ say('fileStatus','');
+}
+function renderFiles(){
+ let list=$('fileList');list.innerHTML='';
+ let paths=Object.keys(files).sort();
+ if(!paths.length){list.textContent='Файлов пока нет.';return}
+ paths.forEach(p=>{
+  let line=document.createElement('div');line.className='fileitem';
+  let label=document.createElement('span');label.textContent=p;
+  let b=document.createElement('button');b.textContent='Открыть';b.onclick=()=>openFile(p);
+  line.append(label,b);list.append(line);
+ });
+}
+function saveFile(){
+ if(!current)return say('fileStatus','Сначала выбери файл.');
+ files[current]=$('editor').value;
+ renderFiles();say('fileStatus','Сохранено: '+current);
+}
+function deleteFile(){
+ if(!current)return;
+ if(!confirm('Удалить '+current+'?'))return;
+ delete files[current];current=null;
+ $('editor').value='';$('editorTitle').textContent='Редактор';
+ renderFiles();say('fileStatus','Файл удалён.');
+}
+function checkJSON(){
+ try{JSON.parse($('editor').value);say('fileStatus','JSON корректен.')}
+ catch(e){say('fileStatus','Ошибка JSON: '+e.message)}
+}
+function importOneFile(){
+ let f=$('importOne').files[0];if(!f)return alert('Выбери файл');
+ let r=new FileReader();
+ r.onload=()=>{put(f.name,r.result);openFile(f.name);renderFiles();say('fileStatus','Файл импортирован.')};
+ r.readAsText(f);
+}
+async function importArchive(){
+ try{
+  if(typeof JSZip==='undefined')throw Error('Не загрузилась библиотека ZIP. Проверь интернет.');
+  let f=$('importArchive').files[0];if(!f)return alert('Выбери архив');
+  let zip=await JSZip.loadAsync(f);
+  let added=0;
+  async function readZip(z,prefix=''){
+   for(let entry of Object.values(z.files)){
+    if(entry.dir)continue;
+    let name=entry.name;
+    let data=await entry.async('uint8array');
+    if(name.toLowerCase().endsWith('.mcpack')||name.toLowerCase().endsWith('.zip')){
+     try{
+      let inner=await JSZip.loadAsync(data);
+      await readZip(inner,prefix);
+      continue;
+     }catch(e){}
+    }
+    let path=safePath(prefix+name);
+    if(name.split('/').some(x=>x==='..'))continue;
+    if(name.toLowerCase().endsWith('.png')){
+     let blob=new Blob([data],{type:'image/png'});
+     let url=await blobToDataURL(blob);
+     files[path]=url;
+    }else{
+     try{files[path]=new TextDecoder().decode(data)}
+     catch(e){files[path]=''}
+    }
+    added++;
+   }
+  }
+  await readZip(zip);
+  renderFiles();
+  say('fileStatus','Импортировано файлов: '+added);
+ }catch(e){say('fileStatus','Ошибка импорта: '+e.message)}
+}
+function blobToDataURL(blob){
+ return new Promise((resolve,reject)=>{
+  let r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(blob);
+ });
+}
+function saveProject(){
+ localStorage.setItem('costlite_project',JSON.stringify({
+  name:$('projectName').value,
+  description:$('description').value,
+  type:$('projectType').value,
+  files:files
+ }));
+ say('homeStatus','Проект сохранён в браузере.');
+}
+function loadProject(){
+ try{
+  let s=localStorage.getItem('costlite_project');
+  if(!s)return say('homeStatus','Сохранение не найдено.');
+  let p=JSON.parse(s);
+  $('projectName').value=p.name||'MyAddon';
+  $('description').value=p.description||'';
+  $('projectType').value=p.type||'bedrock';
+  files=p.files||{};
+  renderFiles();say('homeStatus','Проект загружен.');
+ }catch(e){say('homeStatus','Ошибка загрузки: '+e.message)}
+}
+function clearProject(){
+ if(!confirm('Удалить все файлы текущего проекта?'))return;
+ files={};current=null;$('editor').value='';renderFiles();
+ say('homeStatus','Проект очищен.');
+}
+function makeJava(){
+ let id=$('modId').value.trim().toLowerCase().replace(/[^a-z0-9_]/g,'_');
  let pkg=$('javaPackage').value.trim();
- let cls=$('javaClass').value.trim().replace(/[^A-Za-z0-9_]/g,'')||'MyMod';
- if(!/^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$/.test(pkg)){
-  $('javaStatus').textContent='Неправильный Java package.';
-  return;
- }
- let packagePath=pkg.replace(/\./g,'/');
- put('java/settings.gradle',"pluginManagement { repositories { maven { url = 'https://maven.fabricmc.net/' }; gradlePluginPortal(); mavenCentral() } }\nrootProject.name = '"+mod+"'\n");
- put('java/gradle.properties',
- 'org.gradle.jvmargs=-Xmx2G\n' +
- 'minecraft_version=1.21.1\n' +
- 'yarn_mappings=1.21.1+build.3\n' +
- 'loader_version=0.16.10\n' +
- 'fabric_version=0.115.6+1.21.1\n' +
- 'mod_version=1.0.0\n' +
- 'maven_group='+pkg+'\n' +
- 'archives_base_name='+mod+'\n');
+ let cls=$('className').value.trim();
+ if(!/^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$/.test(pkg))throw Error('Неверный Java package');
+ if(!/^[A-Za-z_][A-Za-z0-9_]*$/.test(cls))throw Error('Неверное имя класса');
+ if(!id)throw Error('Укажи ID мода');
+ let path=pkg.replace(/\./g,'/');
+ put('java/settings.gradle',"pluginManagement { repositories { maven { url = 'https://maven.fabricmc.net/' }; gradlePluginPortal(); mavenCentral() } }\nrootProject.name = '"+id+"'\n");
+ put('java/gradle.properties','org.gradle.jvmargs=-Xmx2G\nminecraft_version=1.21.1\nyarn_mappings=1.21.1+build.3\nloader_version=0.16.10\nfabric_version=0.115.6+1.21.1\nmod_version=1.0.0\nmaven_group='+pkg+'\narchives_base_name='+id+'\n');
  put('java/build.gradle',`plugins {
  id 'fabric-loom' version '1.9-SNAPSHOT'
  id 'maven-publish'
@@ -373,200 +429,87 @@ dependencies {
  modImplementation "net.fabricmc:fabric-loader:\${project.loader_version}"
  modImplementation "net.fabricmc.fabric-api:fabric-api:\${project.fabric_version}"
 }
-processResources {
- inputs.property "version", project.version
- filesMatching("fabric.mod.json") { expand "version": project.version }
-}
-java {
- toolchain { languageVersion = JavaLanguageVersion.of(21) }
- withSourcesJar()
-}
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 `);
- put('java/src/main/resources/fabric.mod.json',JSON.stringify({
-  schemaVersion:1,
-  id:mod,
-  version:'${version}',
-  name:projectName(),
-  description:$('projectDescription').value||'A mod created with CostLite Creator',
-  authors:['CostLite Creator'],
-  environment:'*',
-  entrypoints:{main:[pkg+'.'+cls]},
-  depends:{fabricloader:">=0.16.0",minecraft:"~1.21.1",java:">=21", "fabric-api":"*"}
- },null,2));
- put('java/src/main/java/'+packagePath+'/'+cls+'.java',
- 'package '+pkg+';\n\n'+
- 'import net.fabricmc.api.ModInitializer;\n'+
- 'import org.slf4j.Logger;\n'+
- 'import org.slf4j.LoggerFactory;\n\n'+
- 'public class '+cls+' implements ModInitializer {\n'+
- ' public static final String MOD_ID = "'+mod+'";\n'+
- ' public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);\n'+
- ' @Override public void onInitialize() {\n'+
- '  LOGGER.info("'+mod+' loaded!");\n'+
- ' }\n}\n');
- put('java/.github/workflows/build.yml',
- 'name: Build Fabric Mod\non:\n  workflow_dispatch:\n  push:\n    branches: [ main, master ]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with:\n          distribution: temurin\n          java-version: 21\n      - uses: gradle/actions/setup-gradle@v4\n        with:\n          gradle-version: 8.12\n      - name: Build mod\n        working-directory: java\n        run: gradle build\n      - uses: actions/upload-artifact@v4\n        with:\n          name: fabric-mod\n          path: java/build/libs/*.jar\n');
- put('java/README.txt','Fabric mod starter project. Upload to GitHub and run Actions to build the JAR.');
- $('javaStatus').textContent='Java-проект создан. Его исходники и workflow попадут в ZIP.';
+ put('java/src/main/resources/fabric.mod.json',`{
+ "schemaVersion":1,
+ "id":"${id}",
+ "version":"1.0.0",
+ "name":"${projectName()}",
+ "description":"${$('description').value.replace(/"/g,'')}",
+ "environment":"*",
+ "entrypoints":{"main":["${pkg}.${cls}"]},
+ "depends":{"fabricloader":">=0.16.0","minecraft":"~1.21.1","java":">=21"}
+}`);
+ put('java/src/main/java/'+path+'/'+cls+'.java','package '+pkg+';\n\nimport net.fabricmc.api.ModInitializer;\nimport org.slf4j.Logger;\nimport org.slf4j.LoggerFactory;\n\npublic class '+cls+' implements ModInitializer {\n public static final Logger LOGGER = LoggerFactory.getLogger("'+id+'");\n public void onInitialize(){LOGGER.info("Mod loaded!");}\n}\n');
+ put('java/.github/workflows/build.yml','name: Build Mod\non:\n  workflow_dispatch:\n  push:\n    branches: [ main, master ]\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-java@v4\n        with:\n          distribution: temurin\n          java-version: 21\n      - uses: gradle/actions/setup-gradle@v4\n        with:\n          gradle-version: 8.12\n      - run: gradle build\n        working-directory: java\n      - uses: actions/upload-artifact@v4\n        with:\n          name: mod-jar\n          path: java/build/libs/*.jar\n');
+ put('java/README.txt','Upload this project to GitHub. Run Actions to build the mod JAR.');
  renderFiles();
 }
-function createFile(){
- try{
-  let p=safePath($('newPath').value);
-  if(files[p]!==undefined&&!confirm('Файл существует. Перезаписать?'))return;
-  put(p,'');
-  $('newPath').value='';
-  renderFiles();
-  openFile(p);
- }catch(e){alert(e.message)}
-}
-function importFile(){
- let f=$('fileImport').files[0];
- if(!f)return alert('Сначала выбери файл');
- let reader=new FileReader();
- reader.onload=()=>{
-  put(f.name,reader.result);
-  renderFiles();
-  openFile(f.name);
- };
- reader.readAsText(f);
-}
-function renderFiles(){
- let list=$('fileList');
- list.innerHTML='';
- let paths=Object.keys(files).sort();
- if(!paths.length){list.innerHTML='<div class="small">Пока нет файлов. Создай структуру или новый файл.</div>';return}
- paths.forEach(p=>{
-  let d=document.createElement('div');d.className='fileitem';
-  let name=document.createElement('span');name.textContent=p;
-  let b=document.createElement('button');b.textContent='Открыть';b.onclick=()=>openFile(p);
-  d.append(name,b);list.append(d);
- });
-}
-function openFile(p){
- currentFile=p;
- $('editorTitle').textContent=p;
- $('editor').value=files[p]??'';
- $('fileStatus').textContent='';
-}
-function saveEditedFile(){
- if(!currentFile)return alert('Сначала выбери файл');
- files[currentFile]=$('editor').value;
- $('fileStatus').textContent='Файл сохранён.';
- renderFiles();
-}
-function deleteCurrent(){
- if(!currentFile)return;
- if(!confirm('Удалить '+currentFile+'?'))return;
- delete files[currentFile];currentFile=null;
- $('editorTitle').textContent='Редактор';
- $('editor').value='';
- renderFiles();
-}
-function validateEditor(){
- try{JSON.parse($('editor').value);$('fileStatus').textContent='JSON корректен.'}
- catch(e){$('fileStatus').textContent='Ошибка JSON: '+e.message}
-}
-function saveProject(){
- localStorage.setItem('costlite_project',JSON.stringify({
-  name:$('projectName').value,
-  description:$('projectDescription').value,
-  type:$('projectType').value,
-  files:files
- }));
- $('homeStatus').textContent='Проект сохранён в памяти браузера на этом устройстве.';
-}
-function loadProject(){
- let data=localStorage.getItem('costlite_project');
- if(!data)return $('homeStatus').textContent='Сохранение не найдено.';
- try{
-  let p=JSON.parse(data);
-  $('projectName').value=p.name||'MyAddon';
-  $('projectDescription').value=p.description||'';
-  $('projectType').value=p.type||'bedrock';
-  files=p.files||{};
-  renderFiles();
-  $('homeStatus').textContent='Проект загружен.';
- }catch(e){$('homeStatus').textContent='Не удалось загрузить сохранение.'}
-}
-function clearProject(){
- if(!confirm('Удалить все файлы из текущего проекта?'))return;
- files={};currentFile=null;
- $('editor').value='';$('editorTitle').textContent='Редактор';
- renderFiles();
- $('homeStatus').textContent='Проект очищен.';
+function createJava(){
+ try{makeJava();say('javaStatus','Java-проект создан. Скачай его через вкладку Экспорт.')}
+ catch(e){say('javaStatus',e.message)}
 }
 function downloadBlob(blob,name){
  let url=URL.createObjectURL(blob);
- let a=document.createElement('a');a.href=url;a.download=name;
- document.body.appendChild(a);a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),1500);
+ let a=document.createElement('a');
+ a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
+ setTimeout(()=>URL.revokeObjectURL(url),3000);
 }
-async function makeZip(entries,name){
- if(typeof JSZip==='undefined')throw Error('Не загрузилась библиотека ZIP. Проверь интернет и обнови страницу.');
- let zip=new JSZip();
- Object.entries(entries).forEach(([p,c])=>zip.file(p,c));
- let blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
- downloadBlob(blob,name);
-}
-function packFiles(type){
+function getPack(type){
  let prefix=type==='behavior'?'behavior_pack/':'resource_pack/';
  let out={};
- Object.entries(files).forEach(([p,c])=>{
-  if(p.startsWith(prefix))out[p.slice(prefix.length)]=c;
- });
- if(!out['manifest.json'])throw Error('Не найден '+prefix+'manifest.json. Сначала создай структуру Bedrock.');
+ Object.entries(files).forEach(([p,c])=>{if(p.startsWith(prefix))out[p.slice(prefix.length)]=c});
+ if(!out['manifest.json'])throw Error('Не найден '+prefix+'manifest.json. Создай Bedrock-проект.');
  return out;
 }
-async function exportPack(type){
- try{
-  let data=packFiles(type);
-  let n=projectName();
-  let blob=await new JSZip().file('placeholder','').generateAsync({type:'blob'});
-  let zip=new JSZip();
-  Object.entries(data).forEach(([p,c])=>zip.file(p,c));
-  blob=await zip.generateAsync({type:'blob',compression:'DEFLATE'});
-  downloadBlob(blob,n+(type==='behavior'?'_BP':'_RP')+'.mcpack');
-  $('exportStatus').textContent='Пак скачан.';
- }catch(e){$('exportStatus').textContent=e.message}
+async function zipBytes(obj){
+ let z=new JSZip();
+ for(let [p,c] of Object.entries(obj)){
+  if(typeof c==='string'&&c.startsWith('data:')){
+   let b=await fetch(c).then(r=>r.blob());z.file(p,b);
+  }else z.file(p,c);
+ }
+ return z.generateAsync({type:'uint8array',compression:'DEFLATE'});
 }
-async function exportAddon(){
+async function downloadPack(type){
  try{
-  let bp=packFiles('behavior'),rp=packFiles('resource');
+  let data=getPack(type);
+  let bytes=await zipBytes(data);
+  downloadBlob(new Blob([bytes],{type:'application/zip'}),cleanName($('exportName').value)+(type==='behavior'?'_BP':'_RP')+'.mcpack');
+  say('exportStatus','Пак скачан.');
+ }catch(e){say('exportStatus',e.message)}
+}
+async function downloadAddon(){
+ try{
+  let bp=getPack('behavior'),rp=getPack('resource');
   let outer=new JSZip();
-  async function inner(data){
-   let z=new JSZip();
-   Object.entries(data).forEach(([p,c])=>z.file(p,c));
-   return z.generateAsync({type:'uint8array',compression:'DEFLATE'});
-  }
-  outer.file(projectName()+'_BP.mcpack',await inner(bp));
-  outer.file(projectName()+'_RP.mcpack',await inner(rp));
+  outer.file(cleanName($('exportName').value)+'_BP.mcpack',await zipBytes(bp));
+  outer.file(cleanName($('exportName').value)+'_RP.mcpack',await zipBytes(rp));
   let blob=await outer.generateAsync({type:'blob',compression:'DEFLATE'});
-  downloadBlob(blob,projectName()+'.mcaddon');
-  $('exportStatus').textContent='MCAddon создан.';
- }catch(e){$('exportStatus').textContent=e.message}
+  downloadBlob(blob,cleanName($('exportName').value)+'.mcaddon');
+  say('exportStatus','MCAddon скачан.');
+ }catch(e){say('exportStatus',e.message)}
 }
-async function exportZip(){
+async function downloadAll(){
  try{
-  if(!Object.keys(files).length)throw Error('Проект пустой.');
-  await makeZip(files,projectName()+'.zip');
-  $('exportStatus').textContent='ZIP проекта скачан.';
- }catch(e){$('exportStatus').textContent=e.message}
+  if(!Object.keys(files).length)throw Error('Проект пуст.');
+  let bytes=await zipBytes(files);
+  downloadBlob(new Blob([bytes],{type:'application/zip'}),cleanName($('exportName').value)+'.zip');
+  say('exportStatus','ZIP скачан.');
+ }catch(e){say('exportStatus',e.message)}
 }
-async function exportJava(){
+async function downloadJava(){
  try{
-  let javaFiles={};
-  Object.entries(files).forEach(([p,c])=>{
-   if(p.startsWith('java/'))javaFiles[p.slice(5)]=c;
-  });
-  if(!Object.keys(javaFiles).length)throw Error('Сначала создай Java-проект.');
-  await makeZip(javaFiles,projectName()+'_Java_Source.zip');
-  $('exportStatus').textContent='Java-проект скачан. Загрузи ZIP в GitHub, затем запусти Actions для сборки JAR.';
- }catch(e){$('exportStatus').textContent=e.message}
+  let selected={};
+  Object.entries(files).forEach(([p,c])=>{if(p.startsWith('java/'))selected[p.slice(5)]=c});
+  if(!Object.keys(selected).length)throw Error('Сначала создай Java-проект.');
+  let bytes=await zipBytes(selected);
+  downloadBlob(new Blob([bytes],{type:'application/zip'}),cleanName($('exportName').value)+'_Java.zip');
+  say('exportStatus','Java ZIP скачан. JAR собирается через GitHub Actions.');
+ }catch(e){say('exportStatus',e.message)}
 }
-$('exportName').addEventListener('input',e=>{
- if(e.target.value.trim())$('projectName').value=e.target.value;
-});
+$('exportName').addEventListener('input',()=>{$('projectName').value=$('exportName').value});
 loadProject();
 renderFiles();
 </script>
