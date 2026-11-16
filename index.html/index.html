@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#090b10">
+<title>CostLite Creator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root {
+ --bg:#090b10;--panel:#111722;--panel2:#192231;
+ --line:#283344;--text:#f4f6ff;--muted:#929db0;
+ --green:#45f0b0;--purple:#a184ff;--red:#ff657d;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+header{height:65px;border-bottom:1px solid var(--line);
+ display:flex;align-items:center;justify-content:space-between;
+ padding:0 18px;position:sticky;top:0;background:#0d1119;
+ z-index:5}
+.logo{font-size:23px;font-weight:900;letter-spacing:-1px}
+.logo span{color:var(--green)}
+.header-right{display:flex;gap:9px;align-items:center}
+.status{font-size:11px;color:var(--green)}
+.btn{background:var(--green);color:#07140f;border:0;
+ padding:11px 15px;border-radius:8px;font-weight:bold}
+.btn.secondary{background:var(--panel2);color:white;
+ border:1px solid var(--line)}
+.btn.danger{background:#49232e;color:#ff9baa}
+.layout{display:grid;grid-template-columns:220px 1fr;
+ min-height:calc(100vh - 65px)}
+.sidebar{background:#0d121b;border-right:1px solid var(--line);
+ padding:18px 12px}
+.small{font-size:11px;color:var(--muted);letter-spacing:1px;
+ margin:12px 8px}
+.nav{width:100%;text-align:left;padding:12px;border:0;
+ border-radius:8px;background:transparent;color:#aeb9ca;
+ margin:3px 0}
+.nav.active,.nav:hover{background:#192a2b;color:var(--green)}
+.main{min-width:0;padding:22px}
+.page{display:none}
+.page.active{display:block}
+h1{font-size:27px;margin:0 0 8px}
+h2{font-size:18px}
+p{color:var(--muted);line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:14px;margin-top:20px}
+.card{background:var(--panel);border:1px solid var(--line);
+ border-radius:13px;padding:19px}
+.card h3{margin:5px 0 9px}
+.icon{font-size:27px;margin-bottom:10px}
+.muted{color:var(--muted);font-size:13px}
+.platform{display:flex;gap:10px;margin:20px 0}
+.platform button{flex:1;padding:17px 8px;border-radius:10px;
+ border:1px solid var(--line);background:var(--panel);
+ color:white}
+.platform button.active{border-color:var(--green);
+ color:var(--green);background:#14251f}
+input,select,textarea{background:#0c111a;color:white;
+ border:1px solid var(--line);border-radius:7px;
+ padding:11px;width:100%;outline:none}
+input:focus,textarea:focus{border-color:var(--green)}
+label{display:block;color:var(--muted);font-size:12px;
+ margin:14px 0 6px}
+.editor-layout{display:grid;grid-template-columns:210px 1fr;
+ min-height:430px;border:1px solid var(--line);
+ border-radius:10px;overflow:hidden;margin-top:15px}
+.files{background:#0d121b;padding:12px;border-right:1px solid var(--line)}
+.file{padding:9px 7px;border-radius:6px;font-size:13px;
+ cursor:pointer;color:#bdc6d6;overflow-wrap:anywhere}
+.file.active,.file:hover{background:#1a2930;color:var(--green)}
+.editor{min-width:0;display:flex;flex-direction:column}
+.editor-top{padding:10px 12px;background:#151d29;
+ display:flex;justify-content:space-between;gap:8px;align-items:center}
+#code{height:360px;resize:vertical;border:0;border-radius:0;
+ font:13px/1.7 monospace;tab-size:2;white-space:pre;
+ overflow:auto;background:#0b1018}
+.toolbar{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.toolbar button{font-size:12px}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.row>*{flex:1}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;
+ background:#0b1018;padding:12px;border-radius:8px;color:#a9f5d3}
+footer{padding:25px;text-align:center;color:var(--muted);
+ font-size:12px;border-top:1px solid var(--line)}
+@media(max-width:700px){
+ .layout{grid-template-columns:1fr}
+ .sidebar{display:flex;overflow-x:auto;gap:5px;padding:8px;
+ border-right:0;border-bottom:1px solid var(--line)}
+ .small{display:none}
+ .nav{white-space:nowrap;width:auto;padding:10px}
+ .main{padding:15px}
+ .grid{grid-template-columns:1fr}
+ .editor-layout{grid-template-columns:115px 1fr}
+ header{padding:0 10px}
+ .logo{font-size:19px}
+ .header-right .status{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+ <div class="logo">COST<span>LITE</span> CREATOR</div>
+ <div class="header-right">
+  <span class="status" id="status">● Готов</span>
+  <button class="btn secondary" onclick="saveProject()">Сохранить</button>
+ </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+ <div class="small">WORKSPACE</div>
+ <button class="nav active" onclick="page('home',this)">⌂ Главная</button>
+ <button class="nav" onclick="page('projects',this)">▣ Проекты</button>
+ <button class="nav" onclick="page('editor',this)">⌨ Редактор кода</button>
+ <button class="nav" onclick="page('visual',this)">✧ Конструктор</button>
+ <button class="nav" onclick="page('export',this)">⇩ Экспорт</button>
+ <div class="small">INFORMATION</div>
+ <button class="nav" onclick="page('about',this)">ⓘ О программе</button>
+</aside>
+
+<main class="main">
+
+<section class="page active" id="home">
+ <p class="muted">INDEPENDENT DEVELOPMENT ENVIRONMENT</p>
+ <h1>Создавай Minecraft.</h1>
+ <p>Разрабатывай моды, аддоны и собственные игровые дополнения прямо в браузере.</p>
+
+ <div class="platform">
+  <button class="active" id="bedrockBtn" onclick="setPlatform('bedrock')">
+   <b>BEDROCK</b><br><small>JSON / JS</small>
+  </button>
+  <button id="javaBtn" onclick="setPlatform('java')">
+   <b>JAVA</b><br><small>Java / JSON</small>
+  </button>
+ </div>
+
+ <div class="grid">
+  <div class="card">
+   <div class="icon">⌨</div>
+   <h3>Редактор кода</h3>
+   <p>Создавай файлы, пиши код и редактируй проекты.</p>
+   <button class="btn" onclick="go('editor')">Открыть редактор</button>
+  </div>
+  <div class="card">
+   <div class="icon">🧱</div>
+   <h3>Визуальный конструктор</h3>
+   <p>Создавай простые игровые объекты через формы.</p>
+   <button class="btn secondary" onclick="go('visual')">Открыть</button>
+  </div>
+  <div class="card">
+   <div class="icon">📦</div>
+   <h3>Экспорт</h3>
+   <p>Упаковывай проекты для Minecraft.</p>
+   <button class="btn secondary" onclick="go('export')">Экспортировать</button>
+  </div>
+  <div class="card">
+   <div class="icon">📁</div>
+   <h3>Файлы проекта</h3>
+   <p>Управляй файлами и исходным кодом.</p>
+   <button class="btn secondary" onclick="go('projects')">Мои проекты</button>
+  </div>
+ </div>
+</section>
+
+<section class="page" id="projects">
+ <h1>Мои проекты</h1>
+ <p>Текущий проект CostLite Creator.</p>
+ <div class="card">
+  <h3 id="projectTitle">My Minecraft Project</h3>
+  <p id="projectPlatform">Minecraft Bedrock</p>
+  <button class="btn" onclick="go('editor')">Редактировать</button>
+ </div>
+ <label>Название проекта</label>
+ <input id="projectName" value="My Minecraft Project">
+ <div class="toolbar">
+  <button class="btn" onclick="renameProject()">Изменить название</button>
+  <button class="btn secondary" onclick="saveProject()">Сохранить проект</button>
+ </div>
+</section>
+
+<section class="page" id="editor">
+ <h1>Code Editor</h1>
+ <p>Создавай файлы и редактируй исходники.</p>
+ <div class="toolbar">
+  <button class="btn" onclick="newFile()">+ Файл</button>
+  <button class="btn secondary" onclick="renameFile()">Переименовать</button>
+  <button class="btn danger" onclick="deleteFile()">Удалить</button>
+  <button class="btn secondary" onclick="downloadFile()">Скачать файл</button>
+ </div>
+ <div class="editor-layout">
+  <div class="files">
+   <div class="small">PROJECT FILES</div>
+   <div id="fileList"></div>
+  </div>
+  <div class="editor">
+   <div class="editor-top">
+    <span id="fileName">manifest.json</span>
+    <span class="muted">SOURCE</span>
+   </div>
+   <textarea id="code" spellcheck="false"
+    autocapitalize="off" autocomplete="off"
+    oninput="editCode()"></textarea>
+  </div>
+ </div>
+ <div class="toolbar">
+  <button class="btn" onclick="saveProject()">Сохранить изменения</button>
+  <button class="btn secondary" onclick="createTemplate()">Восстановить шаблон</button>
+ </div>
+</section>
+
+<section class="page" id="visual">
+ <h1>Visual Creator</h1>
+ <p>Простое создание файлов Bedrock через формы.</p>
+ <div class="card">
+  <h3>Создать игрового моба</h3>
+  <label>Имя моба</label>
+  <input id="mobName" value="Custom Zombie">
+  <label>Максимальное здоровье</label>
+  <input id="mobHealth" type="number" value="30" min="1" max="10000">
+  <label>Скорость передвижения</label>
+  <input id="mobSpeed" type="number" value="0.25" step="0.05" min="0">
+  <label>Урон</label>
+  <input id="mobDamage" type="number" value="5" min="0">
+  <div class="toolbar">
+   <button class="btn" onclick="makeMob()">Создать JSON моба</button>
+  </div>
+ </div>
+ <div class="card">
+  <h3>Создать предмет Bedrock</h3>
+  <label>Название предмета</label>
+  <input id="itemName" value="Ruby Sword">
+  <label>Идентификатор (латиница)</label>
+  <input id="itemId" value="ruby_sword">
+  <label>Максимальное количество в стаке</label>
+  <input id="itemStack" type="number" value="1" min="1" max="64">
+  <div class="toolbar">
+   <button class="btn" onclick="makeItem()">Создать JSON предмета</button>
+  </div>
+ </div>
+</section>
+
+<section class="page" id="export">
+ <h1>Export Project</h1>
+ <p id="exportDescription">Выбери формат экспорта.</p>
+ <div class="grid">
+  <div class="card">
+   <h3>Bedrock Add-on</h3>
+   <p>Генерация Behavior Pack и Resource Pack в одном пакете.</p>
+   <button class="btn" onclick="exportBedrock()">Экспорт .mcaddon</button>
+  </div>
+  <div class="card">
+   <h3>Bedrock Resource Pack</h3>
+   <p>Упаковка файлов проекта в .mcpack.</p>
+   <button class="btn secondary" onclick="exportResource()">Экспорт .mcpack</button>
+  </div>
+  <div class="card">
+   <h3>Java Mod Source</h3>
+   <p>Создание исходного проекта Fabric с Gradle.</p>
+   <button class="btn secondary" onclick="exportJava()">Экспорт Java ZIP</button>
+  </div>
+  <div class="card">
+   <h3>Project Backup</h3>
+   <p>Сохранение всех файлов редактора в ZIP.</p>
+   <button class="btn secondary" onclick="backup()">Скачать ZIP</button>
+  </div>
+ </div>
+ <div class="card">
+  <h3>Статус</h3>
+  <pre id="exportStatus">Ожидание экспорта...</pre>
+ </div>
+</section>
+
+<section class="page" id="about">
+ <h1>About CostLite</h1>
+ <div class="card">
+  <h2>CostLite Creator</h2>
+  <p>Браузерная среда разработки Minecraft-проектов.</p>
+  <p>Версия: 1.0 Alpha</p>
+  <p>Поддержка: Bedrock и Java.</p>
+  <p>Все проекты сохраняются локально в браузере. Не очищай данные сайта, пока не скачал резервную копию.</p>
+ </div>
+</section>
+
+</main>
+</div>
+
+<footer>© 2026 COSTLITE STUDIO · CREATOR 1.0 ALPHA</footer>
+
+<script>
+let platform="bedrock";
+let files={};
+let currentFile="manifest.json";
+let project="My Minecraft Project";
+
+function uuid(){
+ return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+  let r=Math.random()*16|0;
+  return (c==="x"?r:(r&3|8)).toString(16);
+ });
+}
+
+function manifest(name,description,type){
+ return JSON.stringify({
+  format_version:2,
+  header:{
+   name:name,
+   description:description,
+   uuid:uuid(),
+   version:[1,0,0],
+   min_engine_version:[1,20,0]
+  },
+  modules:[{
+   type:type,
+   uuid:uuid(),
+   version:[1,0,0]
+  }]
+ },null,2);
+}
+
+function template(){
+ if(platform==="bedrock"){
+  return {
+   "manifest.json":manifest("My Bedrock Addon","Created with CostLite","data"),
+   "entities/custom_zombie.json":JSON.stringify({
+    format_version:"1.20.0",
+    "minecraft:entity":{
+     description:{
+      identifier:"costlite:custom_zombie",
+      is_spawnable:true,
+      is_summonable:true,
+      is_experimental:false
+     },
+     components:{
+      "minecraft:type_family":{family:["monster","undead"]},
+      "minecraft:health":{value:30,max:30},
+      "minecraft:movement":{value:0.25},
+      "minecraft:attack":{damage:5},
+      "minecraft:physics":{},
+      "minecraft:pushable":{is_pushable:true,is_pushable_by_piston:true}
+     }
+    }
+   },null,2),
+   "README.txt":"Created with CostLite Creator. Bedrock starter project."
+  };
+ }
+ return {
+  "settings.gradle":"pluginManagement { repositories { gradlePluginPortal(); mavenCentral() } }\nrootProject.name = 'CostLiteMod'",
+  "build.gradle":"plugins {\n id 'fabric-loom' version '1.9-SNAPSHOT'\n id 'maven-publish'\n}\n\nversion = '1.0.0'\ngroup = 'com.costlite'\n\nrepositories { mavenCentral() }\n\ndependencies {\n minecraft 'com.mojang:minecraft:1.21.1'\n mappings 'net.fabricmc:yarn:1.21.1+build.3:v2'\n modImplementation 'net.fabricmc:fabric-loader:0.16.5'\n}",
+  "src/main/java/com/costlite/ExampleMod.java":"package com.costlite;\n\nimport net.fabricmc.api.ModInitializer;\n\npublic class ExampleMod implements ModInitializer {\n @Override\n public void onInitialize() {\n  System.out.println(\"CostLite Mod loaded!\");\n }\n}",
+  "src/main/resources/fabric.mod.json":JSON.stringify({
+   schemaVersion:1,
+   id:"costlite_mod",
+   version:"1.0.0",
+   name:"CostLite Mod",
+   description:"Created with CostLite Creator",
+   environment:"*",
+   entrypoints:{main:["com.costlite.ExampleMod"]},
+   depends:{fabricloader:">=0.16.0",minecraft:"~1.21.1",java:">=21"}
+  },null,2),
+  "README.txt":"CostLite Java starter project.\nRequires Java 21 and Gradle/Fabric Loom to build."
+ };
+}
+
+function setPlatform(value){
+ if(value===platform)return;
+ if(!confirm("Сменить издание? Текущие файлы будут заменены шаблоном нового проекта."))return;
+ platform=value;
+ files=template();
+ currentFile=Object.keys(files)[0];
+ document.getElementById("bedrockBtn").classList.toggle("active",platform==="bedrock");
+ document.getElementById("javaBtn").classList.toggle("active",platform==="java");
+ document.getElementById("projectPlatform").textContent=platform==="bedrock"?"Minecraft Bedrock":"Minecraft Java";
+ document.getElementById("exportDescription").textContent=platform==="bedrock"?"Bedrock: MCADDON / MCPACK":"Java: Fabric source project";
+ renderFiles();
+ saveProject();
+}
+
+function page(id,button){
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));
+ if(button)button.classList.add("active");
+}
+function go(id){
+ page(id);
+ document.querySelectorAll(".nav").forEach(x=>{
+  x.classList.toggle("active",x.getAttribute("onclick")?.includes("'"+id+"'"));
+ });
+}
+
+function renderFiles(){
+ let list=document.getElementById("fileList");
+ list.innerHTML="";
+ Object.keys(files).forEach(name=>{
+  let div=document.createElement("div");
+  div.className="file"+(name===currentFile?" active":"");
+  div.textContent="📄 "+name;
+  div.onclick=()=>openFile(name);
+  list.appendChild(div);
+ });
+ openFile(currentFile);
+}
+
+function openFile(name){
+ if(!Object.hasOwn(files,name))return;
+ currentFile=name;
+ document.getElementById("fileName").textContent=name;
+ document.getElementById("code").value=files[name];
+ document.querySelectorAll(".file").forEach(x=>{
+  x.classList.toggle("active",x.textContent==="📄 "+name);
+ });
+}
+function editCode(){files[currentFile]=document.getElementById("code").value;}
+function newFile(){
+ let name=prompt("Название файла, например scripts/main.js");
+ if(!name)return;
+ if(files[name]!==undefined){alert("Файл уже существует");return;}
+ files[name]="";
+ currentFile=name;
+ renderFiles();
+}
+function renameFile(){
+ let name=prompt("Новое имя файла",currentFile);
+ if(!name||name===currentFile)return;
+ if(files[name]!==undefined){alert("Такой файл уже существует");return;}
+ files[name]=files[currentFile];
+ delete files[currentFile];
+ currentFile=name;
+ renderFiles();
+}
+function deleteFile(){
+ if(Object.keys(files).length<=1){alert("Нельзя удалить последний файл");return;}
+ if(!confirm("Удалить "+currentFile+"?"))return;
+ delete files[currentFile];
+ currentFile=Object.keys(files)[0];
+ renderFiles();
+}
+function renameProject(){
+ project=document.getElementById("projectName").value.trim()||"My Project";
+ document.getElementById("projectTitle").textContent=project;
+ saveProject();
+}
+function saveProject(){
+ try{
+  localStorage.setItem("costlite_project",JSON.stringify({files,platform,currentFile,project}));
+  document.getElementById("status").textContent="● Сохранено";
+ }catch(e){alert("Не удалось сохранить. Скачай резервную копию.");}
+}
+function loadProject(){
+ try{
+  let data=JSON.parse(localStorage.getItem("costlite_project"));
+  if(data&&data.files){
+   files=data.files;platform=data.platform||"bedrock";
+   currentFile=data.currentFile||Object.keys(files)[0];
+   project=data.project||"My Project";
+  }else files=template();
+ }catch(e){files=template();}
+ document.getElementById("projectName").value=project;
+ document.getElementById("projectTitle").textContent=project;
+ document.getElementById("projectPlatform").textContent=platform==="bedrock"?"Minecraft Bedrock":"Minecraft Java";
+ document.getElementById("bedrockBtn").classList.toggle("active",platform==="bedrock");
+ document.getElementById("javaBtn").classList.toggle("active",platform==="java");
+ renderFiles();
+}
+function createTemplate(){
+ if(!confirm("Заменить текущие файлы шаблоном?"))return;
+ files=template();currentFile=Object.keys(files)[0];renderFiles();
+}
+function downloadBlob(blob,name){
+ let url=URL.createObjectURL(blob);
+ let a=document.createElement("a");
+ a.href=url;a.download=name;a.click();
+ setTimeout(()=>URL.revokeObjectURL(url),2000);
+}
+function downloadFile(){
+ editCode();
+ downloadBlob(new Blob([files[currentFile]],{type:"text/plain"}),currentFile.split("/").pop());
+}
+function addProjectFiles(zip){
+ Object.entries(files).forEach(([name,content])=>zip.file(name,content));
+}
+async function backup(){
+ editCode();
+ if(!window.JSZip){alert("Не удалось загрузить ZIP библиотеку. Проверь интернет.");return;}
+ let zip=new JSZip();addProjectFiles(zip);
+ downloadBlob(await zip.generateAsync({type:"blob"}),"CostLite-Backup.zip");
+}
+async function exportBedrock(){
+ editCode();
+ if(platform!=="bedrock"){alert("Выбери Bedrock.");return;}
+ if(!window.JSZip){alert("Нет подключения к ZIP библиотеке.");return;}
+ let root=new JSZip();
+ let bp=root.folder("Behavior");
+ let rp=root.folder("Resources");
+ let bpFiles={...files};
+ let bpManifest=manifest(project,"Created with CostLite","data");
+ bp.file("manifest.json",bpManifest);
+ Object.entries(bpFiles).forEach(([n,c])=>{
+  if(n!=="manifest.json")bp.file(n,c);
+ });
+ rp.file("manifest.json",manifest(project+" Resources","Resource pack","resources"));
+ rp.file("README.txt","Resource pack generated by CostLite.");
+ document.getElementById("exportStatus").textContent="Создаём MCADDON...";
+ let blob=await root.generateAsync({type:"blob"});
+ downloadBlob(blob,project.replace(/[^a-z0-9_-]/gi,"_")+".mcaddon");
+ document.getElementById("exportStatus").textContent="Пакет создан. Это стартовая структура. Перед использованием проверь зависимости и содержимое паков.";
+}
+async function exportResource(){
+ editCode();
+ if(!window.JSZip){alert("Нет подключения к ZIP библиотеке.");return;}
+ let zip=new JSZip();
+ zip.file("manifest.json",manifest(project+" Resources","Created with CostLite","resources"));
+ Object.entries(files).forEach(([n,c])=>{
+  if(n!=="manifest.json")zip.file(n,c);
+ });
+ let blob=await zip.generateAsync({type:"blob"});
+ downloadBlob(blob,project+".mcpack");
+ document.getElementById("exportStatus").textContent="Resource Pack экспортирован.";
+}
+async function exportJava(){
+ editCode();
+ if(platform!=="java"){alert("Выбери Java.");return;}
+ if(!window.JSZip){alert("Нет подключения к ZIP библиотеке.");return;}
+ let zip=new JSZip();addProjectFiles(zip);
+ zip.file("gradlew-notice.txt","Use Gradle with Java 21 to build this Fabric project. This ZIP contains source files, not a compiled JAR.");
+ let blob=await zip.generateAsync({type:"blob"});
+ downloadBlob(blob,"CostLite-Java-Source.zip");
+ document.getElementById("exportStatus").textContent="Исходный Java-проект экспортирован. Для получения JAR потребуется сборка Gradle.";
+}
+function makeMob(){
+ if(platform!=="bedrock"){alert("Визуальный генератор пока работает для Bedrock.");return;}
+ let name=document.getElementById("mobName").value.trim()||"Custom Zombie";
+ let health=Math.max(1,Number(document.getElementById("mobHealth").value)||30);
+ let speed=Math.max(0,Number(document.getElementById("mobSpeed").value)||0.25);
+ let damage=Math.max(0,Number(document.getElementById("mobDamage").value)||5);
+ let id=name.toLowerCase().replace(/[^a-z0-9_]/g,"_");
+ let obj={
+  format_version:"1.20.0",
+  "minecraft:entity":{
+   description:{identifier:"costlite:"+id,is_spawnable:true,is_summonable:true,is_experimental:false},
+   components:{
+    "minecraft:type_family":{family:["monster"]},
+    "minecraft:health":{value:health,max:health},
+    "minecraft:movement":{value:speed},
+    "minecraft:attack":{damage:damage},
+    "minecraft:physics":{}
+   }
+  }
+ };
+ files["entities/"+id+".json"]=JSON.stringify(obj,null,2);
+ currentFile="entities/"+id+".json";
+ renderFiles();go("editor");
+}
+function makeItem(){
+ if(platform!=="bedrock"){alert("Генератор предметов пока работает для Bedrock.");return;}
+ let name=document.getElementById("itemName").value.trim()||"Ruby Sword";
+ let id=document.getElementById("itemId").value.trim().toLowerCase().replace(/[^a-z0-9_]/g,"_");
+ let stack=Math.min(64,Math.max(1,Number(document.getElementById("itemStack").value)||1));
+ let obj={
+  format_version:"1.20.50",
+  "minecraft:item":{
+   description:{identifier:"costlite:"+id,menu_category:{category:"equipment"}},
+   components:{"minecraft:max_stack_size":stack}
+  }
+ };
+ files["items/"+id+".json"]=JSON.stringify(obj,null,2);
+ currentFile="items/"+id+".json";
+ renderFiles();go("editor");
+}
+document.getElementById("code").addEventListener("keydown",e=>{
+ if(e.key==="Tab"){
+  e.preventDefault();
+  let a=e.target.selectionStart,b=e.target.selectionEnd;
+  e.target.setRangeText("  ",a,b,"end");
+  editCode();
+ }
+});
+loadProject();
+</script>
+</body>
+</html>
